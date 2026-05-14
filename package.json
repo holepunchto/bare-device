@@ -1,0 +1,43 @@
+{
+  "name": "bare-device",
+  "version": "0.0.0",
+  "description": "Cross-platform device management for Android and iOS",
+  "exports": {
+    ".": "./index.js",
+    "./android": "./android.js",
+    "./ios": "./ios.js",
+    "./package": "./package.json"
+  },
+  "bin": {
+    "bare-device": "bin/device.js"
+  },
+  "files": [
+    "index.js",
+    "android.js",
+    "ios.js",
+    "bin"
+  ],
+  "scripts": {
+    "format": "prettier --write . && lunte --fix",
+    "lint": "prettier --check . && lunte"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/holepunchto/bare-device.git"
+  },
+  "author": "Holepunch",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/holepunchto/bare-device/issues"
+  },
+  "homepage": "https://github.com/holepunchto/bare-device#readme",
+  "dependencies": {
+    "bare-device-android": "file:../bare-device-android",
+    "bare-device-ios": "file:../bare-device-ios"
+  },
+  "devDependencies": {
+    "lunte": "^1.6.0",
+    "prettier": "^3.6.2",
+    "prettier-config-holepunch": "^2.0.0"
+  }
+}
