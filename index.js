@@ -1,2 +1,47 @@
-exports.AndroidDevice = require('bare-device-android')
-exports.IOSDevice = require('bare-device-ios')
+const os = require('os')
+const LocalDevice = require('./lib/local')
+const SimulatorDevice = require('./lib/simulator')
+const AndroidDevice = require('./lib/android')
+
+exports.LocalDevice = LocalDevice
+exports.SimulatorDevice = SimulatorDevice
+exports.AndroidDevice = AndroidDevice
+
+exports.devices = async function devices() {
+  const result = [new LocalDevice()]
+
+  // A machine without the tools for a platform simply has none of its devices.
+  if (os.platform() === 'darwin') result.push(...(await SimulatorDevice.list().catch(() => [])))
+
+  result.push(...(await AndroidDevice.list().catch(() => [])))
+
+  return result
+}
+
+exports.find = async function find(opts = {}) {
+  const { platform = os.platform(), name = null } = opts
+
+  const candidates = (await exports.devices()).filter((device) => device.platform === platform)
+
+  if (candidates.length === 0) throw new Error(`No devices for platform '${platform}'`)
+
+  if (name !== null) {
+    const query = name.toLowerCase()
+
+    const device =
+      candidates.find((device) => device.name.toLowerCase() === query) ||
+      candidates.find((device) => device.name.toLowerCase().includes(query))
+
+    if (device === undefined) throw new Error(`No device matching '${name}'`)
+
+    return device
+  }
+
+  const device = candidates.find((device) => device.running)
+
+  if (device === undefined) {
+    throw new Error(`No running device for platform '${platform}', so one must be named`)
+  }
+
+  return device
+}
