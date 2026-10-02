@@ -1,25 +1,45 @@
 {
   "name": "bare-device",
   "version": "0.0.0",
-  "description": "Cross-platform device management for Android and iOS",
+  "description": "Find devices and run apps on them",
   "exports": {
-    ".": "./index.js",
-    "./android": "./android.js",
-    "./ios": "./ios.js",
-    "./package": "./package.json"
+    "./package": "./package.json",
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
   },
-  "bin": {
-    "bare-device": "bin/device.js"
+  "imports": {
+    "#env": {
+      "bare": "./lib/env/bare.js",
+      "default": "./lib/env/node.js"
+    },
+    "child_process": {
+      "bare": "bare-subprocess",
+      "default": "child_process"
+    },
+    "fs": {
+      "bare": "bare-fs",
+      "default": "fs"
+    },
+    "os": {
+      "bare": "bare-os",
+      "default": "os"
+    },
+    "path": {
+      "bare": "bare-path",
+      "default": "path"
+    }
   },
   "files": [
     "index.js",
-    "android.js",
-    "ios.js",
-    "bin"
+    "index.d.ts",
+    "lib"
   ],
   "scripts": {
     "format": "prettier --write . && lunte --fix",
-    "lint": "prettier --check . && lunte"
+    "lint": "prettier --check . && lunte",
+    "test": "brittle-bare --coverage test.js"
   },
   "repository": {
     "type": "git",
@@ -32,12 +52,20 @@
   },
   "homepage": "https://github.com/holepunchto/bare-device#readme",
   "dependencies": {
-    "bare-device-android": "file:../bare-device-android",
-    "bare-device-ios": "file:../bare-device-ios"
+    "bare-env": "^3.0.1",
+    "bare-fs": "^4.8.2",
+    "bare-os": "^3.9.3",
+    "bare-path": "^3.1.2",
+    "bare-stream": "^2.13.4",
+    "bare-subprocess": "^6.2.0"
+  },
+  "optionalDependencies": {
+    "bare-apk": "^0.1.5"
   },
   "devDependencies": {
-    "lunte": "^1.6.0",
-    "prettier": "^3.6.2",
+    "brittle": "^4.3.0",
+    "lunte": "^1.8.0",
+    "prettier": "^3.4.1",
     "prettier-config-holepunch": "^2.0.0"
   }
 }

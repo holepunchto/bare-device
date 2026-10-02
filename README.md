@@ -1,6 +1,6 @@
 # bare-device
 
-Cross-platform device management for Android and iOS. Delegates to `bare-device-android` (<https://github.com/holepunchto/bare-device-android>) and `bare-device-ios` (<https://github.com/holepunchto/bare-device-ios>), which may also be used directly.
+Find devices and run things on them. A device is this machine, an iOS simulator, or an Android device or emulator, and each one says which host to build for with <https://github.com/holepunchto/bare-build>. A standalone executable can be run on any of them, and an app can be installed and launched on any of them.
 
 ```
 npm i bare-device
@@ -9,56 +9,36 @@ npm i bare-device
 ## Usage
 
 ```js
-const { AndroidDevice, IOSDevice } = require('bare-device')
-const stdio = require('bare-stdio')
+const { find } = require('bare-device')
 
-{
-  const device = new AndroidDevice('your-android-device-id')
-  const app = 'com.example.myapp'
+const device = await find({ platform: 'ios', name: 'iPhone 17' })
 
-  device.install('./build/android-arm64/myapp.apk')
-  device.grant(app, ['ACCESS_FINE_LOCATION'])
+// Build the app for `device.host`, then:
 
-  const androidProcess = device.launch(app, {
-    activity: 'to.holepunch.bare.Activity',
-    stream: true
-  })
+await device.install('out/App.app')
 
-  androidProcess.stdout.pipe(stdio.out)
-  await androidProcess.close()
-  device.stop(app)
-}
+const app = await device.launch('out/App.app')
 
-{
-  const device = new IOSDevice('your-ios-device-id')
-  const app = 'com.example.myapp'
+app.stdout.on('data', (data) => console.log(data.toString()))
 
-  device.install('./build/ios-arm64/myapp.app')
-
-  const iosProcess = device.launch(app, {
-    args: ['driver'],
-    stream: true
-  })
-
-  iosProcess.stdout.pipe(stdio.out)
-  await iosProcess.close()
-  device.stop(app)
-}
+await app.close()
 ```
 
-## API
+A standalone executable is run with `spawn()`:
 
-#### `const { AndroidDevice, IOSDevice } = require('bare-device')`
+```js
+const device = await find({ platform: 'android' })
 
-Re-exports `AndroidDevice` from `bare-device-android` and `IOSDevice` from `bare-device-ios`.
+// Build a standalone executable for `device.host`, then:
 
-#### `const AndroidDevice = require('bare-device/android')`
+const process = await device.spawn('out/bare', [], { stdio: 'inherit' })
 
-Subpath export equivalent to `require('bare-device-android')`. See <https://github.com/holepunchto/bare-device-android> for the full API.
+const { code } = await process.exited
 
-#### `const IOSDevice = require('bare-device/ios')`
+await process.close()
+```
 
-Subpath export equivalent to `require('bare-device-ios')`. See <https://github.com/holepunchto/bare-device-ios> for the full API.
+On Android, Bare writes `console` output to logcat rather than to standard output.
 
 ## License
 
