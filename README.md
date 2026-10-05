@@ -38,6 +38,8 @@ const { code } = await process.exited
 await process.close()
 ```
 
+On Linux, an app launched without a display, such as on a CI runner, is given a virtual one using `Xvfb`, which must then be installed.
+
 On Android, Bare writes `console` output to logcat rather than to standard output.
 
 ## License
