@@ -49,8 +49,8 @@ interface AppDevice extends Device {
   install(app: string): Promise<void>
 
   /**
-   * Launch the app at `app`, passing it `args`. With `activate`, an app on this machine is brought
-   * to the front.
+   * Launch the app at `app`, passing it `args`. Resolves once the app is running. With `activate`,
+   * the app is asked to come to the front, which the platform may decline.
    */
   launch(
     app: string,
@@ -58,7 +58,12 @@ interface AppDevice extends Device {
   ): Promise<DeviceProcess>
 }
 
-/** This machine. */
+/**
+ * This machine. An app is the bundle `bare-build` makes: the `.app` on macOS, the `.AppDir` on
+ * Linux, and the content directory on Windows. On macOS, an app is launched through Launch
+ * Services, as the Finder launches it, so it does not inherit the environment of this process and
+ * how it exits is not reported. Standard input is not connected.
+ */
 interface LocalDevice extends AppDevice {
   readonly kind: 'local'
 }

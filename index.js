@@ -10,7 +10,7 @@ exports.AndroidDevice = AndroidDevice
 exports.devices = async function devices() {
   const result = [new LocalDevice()]
 
-  // A machine without the tools for a platform simply has none of its devices.
+  // A machine without a platform's tools has none of its devices.
   if (os.platform() === 'darwin') result.push(...(await SimulatorDevice.list().catch(() => [])))
 
   result.push(...(await AndroidDevice.list().catch(() => [])))
