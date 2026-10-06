@@ -30,7 +30,10 @@ exports.find = async function find(opts = {}) {
     return device
   }
 
-  const device = candidates.find((device) => device.running)
+  // A simulator is booted when it is first used, so one can be picked even if none is running.
+  const device =
+    candidates.find((device) => device.running) ||
+    candidates.find((device) => device.kind === 'simulator')
 
   if (device === undefined) {
     throw new Error(`No running device for platform '${platform}', so one must be named`)
