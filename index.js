@@ -8,20 +8,13 @@ exports.SimulatorDevice = SimulatorDevice
 exports.AndroidDevice = AndroidDevice
 
 exports.devices = async function devices() {
-  const result = [new LocalDevice()]
-
-  // A machine without a platform's tools has none of its devices.
-  if (os.platform() === 'darwin') result.push(...(await SimulatorDevice.list().catch(() => [])))
-
-  result.push(...(await AndroidDevice.list().catch(() => [])))
-
-  return result
+  return [new LocalDevice(), ...(await simulators()), ...(await androids())]
 }
 
 exports.find = async function find(opts = {}) {
   const { platform = os.platform(), name = null } = opts
 
-  const candidates = (await exports.devices()).filter((device) => device.platform === platform)
+  const candidates = (await list(platform)).filter((device) => device.platform === platform)
 
   if (candidates.length === 0) throw new Error(`No devices for platform '${platform}'`)
 
@@ -44,4 +37,25 @@ exports.find = async function find(opts = {}) {
   }
 
   return device
+}
+
+function list(platform) {
+  switch (platform) {
+    case 'ios':
+      return simulators()
+    case 'android':
+      return androids()
+    default:
+      return [new LocalDevice()]
+  }
+}
+
+function simulators() {
+  if (os.platform() !== 'darwin') return []
+
+  return SimulatorDevice.list().catch(() => [])
+}
+
+function androids() {
+  return AndroidDevice.list().catch(() => [])
 }
