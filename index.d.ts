@@ -108,7 +108,8 @@ declare function devices(): Promise<Device[]>
 
 /**
  * Find a device for `platform`, which defaults to this machine's. A `name` picks a device by name,
- * preferring an exact match. Without one, the first device that is already running is picked.
+ * preferring an exact match. Without one, the first device that is already running is picked. For
+ * `ios`, the newest iPhone simulator is picked if none is running, and is booted when first used.
  */
 declare function find(opts?: { platform?: string; name?: string | null }): Promise<Device>
 
