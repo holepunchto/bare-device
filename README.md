@@ -42,7 +42,7 @@ Without a `name`, `find()` picks a device that is already running. On iOS, the n
 
 On Linux, an app launched without a display, such as on a CI runner, is given a virtual one using `Xvfb`, which must then be installed.
 
-On Android, Bare writes `console` output to logcat rather than to standard output.
+On Android, Bare writes `console` output to logcat rather than to standard output. An app that needs runtime permissions can be installed with `install(app, { grant: true })`, which grants them up front so the app never has to ask.
 
 ## License
 

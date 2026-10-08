@@ -46,7 +46,16 @@ interface Device {
 /** A device that apps can be installed on and launched. */
 interface AppDevice extends Device {
   /** Install the app at `app`, booting the device first if it has to be. */
-  install(app: string): Promise<void>
+  install(
+    app: string,
+    opts?: {
+      /**
+       * Grant the app its runtime permissions as it is installed, so it never has to ask. Android
+       * only, and ignored elsewhere.
+       */
+      grant?: boolean
+    }
+  ): Promise<void>
 
   /**
    * Launch the app at `app`, passing it `args`. Resolves once the app is running. With `activate`,
