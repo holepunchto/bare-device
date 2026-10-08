@@ -1,6 +1,6 @@
 {
   "name": "bare-device",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "Find devices and run apps on them",
   "exports": {
     "./package": "./package.json",
