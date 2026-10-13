@@ -81,7 +81,7 @@ declare class LocalDevice {
   constructor()
 }
 
-/** An iOS simulator. */
+/** An iOS simulator. How a launched app exits is not reported. */
 interface SimulatorDevice extends AppDevice {
   readonly kind: 'simulator'
   readonly booted: boolean
