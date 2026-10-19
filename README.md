@@ -1,6 +1,6 @@
 # bare-device
 
-Find devices and run things on them. A device is this machine, an iOS simulator, or an Android device or emulator, and each one says which host to build for with <https://github.com/holepunchto/bare-build>. A standalone executable can be run on any of them, and an app can be installed and launched on any of them.
+Find devices and run things on them. A device is this machine, an iOS simulator or device, or an Android device or emulator, and each one says which host to build for with <https://github.com/holepunchto/bare-build>. A standalone executable can be run on any of them, and an app can be installed and launched on any of them.
 
 ```
 npm i bare-device
@@ -38,7 +38,9 @@ const { code } = await process.exited
 await process.close()
 ```
 
-Without a `name`, `find()` picks a device that is already running. On iOS, the newest iPhone simulator is picked if none is running, such as on a CI runner, and is booted when it is first used.
+Without a `name`, `find()` picks a device that is already running. On iOS, a booted simulator is picked before a paired iPhone, and the newest iPhone simulator is picked if none is running, such as on a CI runner, and is booted when it is first used.
+
+An iPhone has to be paired with this machine, with developer mode on, and reachable over USB or the local network. The app has to be signed for it. Only apps can be run on an iPhone, so `spawn()` is not available.
 
 On Linux, an app launched without a display, such as on a CI runner, is given a virtual one using `Xvfb`, which must then be installed.
 

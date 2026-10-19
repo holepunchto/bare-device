@@ -1,14 +1,16 @@
 const os = require('os')
 const LocalDevice = require('./lib/local')
 const SimulatorDevice = require('./lib/simulator')
+const IOSDevice = require('./lib/ios')
 const AndroidDevice = require('./lib/android')
 
 exports.LocalDevice = LocalDevice
 exports.SimulatorDevice = SimulatorDevice
+exports.IOSDevice = IOSDevice
 exports.AndroidDevice = AndroidDevice
 
 exports.devices = async function devices() {
-  return [new LocalDevice(), ...(await simulators()), ...(await androids())]
+  return [new LocalDevice(), ...(await simulators()), ...(await iphones()), ...(await androids())]
 }
 
 exports.find = async function find(opts = {}) {
@@ -42,10 +44,10 @@ exports.find = async function find(opts = {}) {
   return device
 }
 
-function list(platform) {
+async function list(platform) {
   switch (platform) {
     case 'ios':
-      return simulators()
+      return [...(await simulators()), ...(await iphones())]
     case 'android':
       return androids()
     default:
@@ -57,6 +59,12 @@ function simulators() {
   if (os.platform() !== 'darwin') return []
 
   return SimulatorDevice.list().catch(() => [])
+}
+
+function iphones() {
+  if (os.platform() !== 'darwin') return []
+
+  return IOSDevice.list().catch(() => [])
 }
 
 function androids() {

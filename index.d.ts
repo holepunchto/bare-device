@@ -96,6 +96,21 @@ declare class SimulatorDevice {
 }
 
 /**
+ * An iPhone or iPad paired with this machine. Only apps can be run on it, and only when it is
+ * reachable, so `spawn()` and `reverse()` reject. The app's standard streams are bridged by
+ * `devicectl`, and stopping the app stops the bridge.
+ */
+interface IOSDevice extends AppDevice {
+  readonly kind: 'device'
+}
+
+declare class IOSDevice {
+  protected constructor()
+
+  static list(): Promise<IOSDevice[]>
+}
+
+/**
  * An Android device or emulator. Launching an APK requires the optional `bare-apk` dependency, and
  * an app's output is read from its log, so it includes what Android itself logs for the app.
  */
@@ -127,6 +142,7 @@ export {
   AppDevice,
   Device,
   DeviceProcess,
+  IOSDevice,
   LocalDevice,
   SimulatorDevice,
   SpawnOptions,
