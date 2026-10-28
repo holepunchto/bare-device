@@ -38,6 +38,8 @@ const { code } = await process.exited
 await process.close()
 ```
 
+Both take `env`, environment variables to set for the process on top of those it gets anyway, such as the ones `bare-make test env` prints.
+
 Without a `name`, `find()` picks a device that is already running. On iOS, a booted simulator is picked before a paired iPhone, and the newest iPhone simulator is picked if none is running, such as on a CI runner, and is booted when it is first used.
 
 An iPhone has to be paired with this machine, with developer mode on, and reachable over USB or the local network. The app has to be signed for it. Only apps can be run on an iPhone, so `spawn()` is not available.
