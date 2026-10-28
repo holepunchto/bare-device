@@ -20,6 +20,8 @@ interface DeviceProcess {
 interface SpawnOptions {
   /** How the standard streams are connected. Defaults to `['ignore', 'pipe', 'pipe']`. */
   stdio?: IO | [stdin?: IO, stdout?: IO, stderr?: IO]
+  /** Environment variables to set for the process, on top of those it gets anyway. */
+  env?: Record<string, string>
 }
 
 interface Device {
@@ -70,8 +72,8 @@ interface AppDevice extends Device {
 /**
  * This machine. An app is the bundle `bare-build` makes: the `.app` on macOS, the `.AppDir` on
  * Linux, and the content directory on Windows. On macOS, an app is launched through Launch
- * Services, as the Finder launches it, so it does not inherit the environment of this process and
- * how it exits is not reported. Standard input is not connected.
+ * Services, as the Finder launches it, so it does not inherit the environment of this process,
+ * only `env`, and how it exits is not reported. Standard input is not connected.
  */
 interface LocalDevice extends AppDevice {
   readonly kind: 'local'
